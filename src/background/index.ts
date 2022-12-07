@@ -1,6 +1,4 @@
-import { CipherMode } from "crypto";
-
-chrome.runtime.onMessage.addListener(function(request, sender: chrome.runtime.MessageSender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request, sender: chrome.runtime.MessageSender, sendResponse) {
   console.log("Got message from content Script: ", request);
   postData(JSON.stringify(request.data));
   sendResponse('OK');
@@ -10,7 +8,7 @@ chrome.runtime.onMessage.addListener(function(request, sender: chrome.runtime.Me
 
 async function postData(body : any){
   let headers = {
-    "Content-Type": "text/plain"
+    "Content-Type": "application/json"
   };
 
  let request = {

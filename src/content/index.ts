@@ -6,10 +6,12 @@ import { DocumentLoadInstrumentation } from '@opentelemetry/instrumentation-docu
 import { ZoneContextManager } from '@opentelemetry/context-zone';
 import { registerInstrumentations } from '@opentelemetry/instrumentation';
 import { XMLHttpRequestInstrumentation } from '@opentelemetry/instrumentation-xml-http-request';
+import { Resource } from '@opentelemetry/resources';
+import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
 
 console.log('Hey, the content script is running!');
 window.addEventListener("load", function(request){
-   console.log('V51 I called open telemetry apis to capture page loading details. Next step is to forward this info to Jager');   
+   console.log('V53 I called open telemetry apis to capture page loading details. Next step is to forward this info to Jager');   
  
   // initOpenTelemetry();
   console.log("Posting the data");
@@ -42,7 +44,13 @@ window.addEventListener("load", function(request){
   */
 
   // The second most elegant way is user custom span exporter and using backend script for sending traces
-  const provider = new WebTracerProvider();
+
+  const provider = new WebTracerProvider({
+    resource: new Resource({
+        [SemanticResourceAttributes.SERVICE_NAME]: "ts-chrome-extension"
+    }),
+  });
+  //const provider = new WebTracerProvider();
   provider.addSpanProcessor(new SimpleSpanProcessor(new ServiceWorkerSpanExporter()));
 
   provider.register({
