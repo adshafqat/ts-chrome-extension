@@ -3,7 +3,7 @@ npm run dist
 
 
 Open Telemantory Required packages
-npm install @opentelemetry/api    @opentelemetry/context-zone    @opentelemetry/exporter-collector   @opentelemetry/instrumentation-document-load   @opentelemetry/propagator-b3 @opentelemetry/sdk-trace-base    @opentelemetry/sdk-trace-web @opentelemetry/instrumentation-xml-http-request
+npm install @opentelemetry/api    @opentelemetry/context-zone    @opentelemetry/exporter-collector   @opentelemetry/instrumentation-document-load   @opentelemetry/propagator-b3 @opentelemetry/sdk-trace-base    @opentelemetry/sdk-trace-web @opentelemetry/instrumentation-xml-http-request @opentelemetry/semantic-conventions
 sudo npm install copyfiles -g
 
 If you want to mofdify otel config
@@ -12,8 +12,26 @@ sudo service otelcol restart
 sudo service otelcol status
 journalctl | grep otelcol 
 
-Solution to send data to Open tel. The prerequisist for this is that opentelemetry should be installed on the vm. The disadvatage of local opentel instance is that you can't run jaeger or zipkin instances becuase it says that ports are already used 
+Solution to send data to Open tel. The prerequisist for this is that opentelemetry should be installed on the vm. The disadvatage of local opentel instance is that you can't run jaeger or zipkin instances becuase it says that ports are already used. To solve this runn jaeger on a differnt vm using docker and changer otelconfig and point to the jaeger instance. The otelconfig is copied in opentelagentconfig folder.
 https://www.npmjs.com/package/@opentelemetry/exporter-trace-otlp-http
+
+Local Jaeger setup (not used)
+sudo docker run -d --name jaeger \
+  -e COLLECTOR_ZIPKIN_HOST_PORT=:9411 \
+  -e COLLECTOR_OTLP_ENABLED=true \
+  -p 6831:6831/udp \
+  -p 6832:6832/udp \
+  -p 5778:5778 \
+  -p 16686:16686 \
+  -p 4317:4317 \
+  -p 4318:4318 \
+  -p 14250:14250 \
+  -p 14268:14268 \
+  -p 14269:14269 \
+  -p 9411:9411 \
+  jaegertracing/all-in-one:latest
+
+
 
 Helpful solution (Not used)
 https://stackoverflow.com/questions/63485673/how-to-correctly-use-opentelemetry-exporter-with-opentelemetry-collector-in-clie/63489195#63489195
@@ -47,31 +65,9 @@ sudo docker run otel/opentelemetry-collector:0.66.0
 sudo docker run -v $(pwd)/collector-config.yaml:/etc/otelcol/config.yaml otel/opentelemetry-collector:0.66.0
 
 
-
-Local Jaeger setup (not used)
-sudo docker run -d --name jaeger \
-  -e COLLECTOR_ZIPKIN_HOST_PORT=:9411 \
-  -e COLLECTOR_OTLP_ENABLED=true \
-  -p 6831:6831/udp \
-  -p 6832:6832/udp \
-  -p 5778:5778 \
-  -p 16686:16686 \
-  -p 4317:4317 \
-  -p 4318:4318 \
-  -p 14250:14250 \
-  -p 14268:14268 \
-  -p 14269:14269 \
-  -p 9411:9411 \
-  jaegertracing/all-in-one:latest
-
-
-
-
-
-
 Useful git commands
 git add README.md
-git commit -m "first commit"
+git commit -m "Updating Code"
 git branch -M main
 git remote add origin https://github.com/adshafqat/ts-chrome-extension.git
 git push -u origin main
