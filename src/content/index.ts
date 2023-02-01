@@ -11,7 +11,7 @@ import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
 
 console.log('Hey, the content script is running!');
 window.addEventListener("load", function(request){
-   console.log('V53 I called open telemetry apis to capture page loading details. Next step is to forward this info to Jager');   
+   console.log('V54 I called open telemetry apis to capture page loading details. Next step is to forward this info to Jager');   
  
   // initOpenTelemetry();
   console.log("Posting the data");
@@ -51,7 +51,8 @@ window.addEventListener("load", function(request){
     }),
   });
   //const provider = new WebTracerProvider();
-  provider.addSpanProcessor(new SimpleSpanProcessor(new ServiceWorkerSpanExporter()));
+  //provider.addSpanProcessor(new SimpleSpanProcessor(new ServiceWorkerSpanExporter()));
+  provider.addSpanProcessor(new BatchSpanProcessor(new ServiceWorkerSpanExporter()));
 
   provider.register({
     // Changing default contextManager to use ZoneContextManager - supports asynchronous operations - optional
